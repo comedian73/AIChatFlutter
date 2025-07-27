@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ai_chat_flutter/services/app_settings_service.dart';
+import 'package:ai_chat_flutter/api/openrouter_client.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -35,6 +36,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (_selectedBaseUrl != null) {
       await _appSettingsService.setBaseUrl(_selectedBaseUrl!);
     }
+    // Re-initialize OpenRouterClient with new settings
+    await OpenRouterClient.initialize(_appSettingsService);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Settings saved!')),
     );

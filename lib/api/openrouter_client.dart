@@ -37,23 +37,33 @@ class OpenRouterClient {
 
   // Статический метод для инициализации клиента
   static Future<void> initialize(AppSettingsService appSettingsService) async {
-    if (_isInitialized) {
-      return;
+    if (_isInitialized && _instance != null) {
+      // If already initialized, update existing instance
+      _instance!._apiKey = appSettingsService.openRouterApiKey;
+      _instance!._baseUrl = appSettingsService.baseUrl;
+      _instance!._maxTokens = appSettingsService.maxTokens;
+      _instance!._temperature = appSettingsService.temperature;
+      _instance!._headers = {
+        'Authorization': 'Bearer ${_instance!._apiKey}',
+        'Content-Type': 'application/json',
+        'X-Title': 'AI Chat Flutter',
+      };
+      _instance!._initializeClient();
+    } else {
+      // Otherwise, create a new instance
+      _instance = OpenRouterClient._internal();
+      _instance!._apiKey = appSettingsService.openRouterApiKey;
+      _instance!._baseUrl = appSettingsService.baseUrl;
+      _instance!._maxTokens = appSettingsService.maxTokens;
+      _instance!._temperature = appSettingsService.temperature;
+      _instance!._headers = {
+        'Authorization': 'Bearer ${_instance!._apiKey}',
+        'Content-Type': 'application/json',
+        'X-Title': 'AI Chat Flutter',
+      };
+      _instance!._initializeClient();
+      _isInitialized = true;
     }
-
-    _instance = OpenRouterClient._internal();
-    _instance!._apiKey = appSettingsService.openRouterApiKey;
-    _instance!._baseUrl = appSettingsService.baseUrl;
-    _instance!._maxTokens = appSettingsService.maxTokens;
-    _instance!._temperature = appSettingsService.temperature;
-    _instance!._headers = {
-      'Authorization': 'Bearer ${_instance!._apiKey}',
-      'Content-Type': 'application/json',
-      'X-Title': 'AI Chat Flutter',
-    };
-
-    _instance!._initializeClient();
-    _isInitialized = true;
   }
 
   // Метод инициализации клиента
