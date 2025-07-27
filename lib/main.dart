@@ -1,7 +1,6 @@
 // Импорт основных виджетов Flutter
 import 'package:flutter/material.dart';
 // Импорт пакета для работы с .env файлами
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 // Импорт пакета для локализации приложения
 import 'package:flutter_localizations/flutter_localizations.dart';
 // Импорт пакета для работы с провайдерами состояния
@@ -10,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'providers/chat_provider.dart';
 // Импорт основного экрана чата
 import 'screens/chat_screen.dart';
+import 'package:ai_chat_flutter/services/app_settings_service.dart';
+import 'package:ai_chat_flutter/api/openrouter_client.dart';
 
 // Виджет для обработки и отлова ошибок в приложении
 class ErrorBoundaryWidget extends StatelessWidget {
@@ -81,17 +82,19 @@ void main() async {
       debugPrint('Stack trace: ${details.stack}');
     };
 
-    // Загрузка переменных окружения из .env файла
-    await dotenv.load(fileName: ".env");
-    // Логирование успешной загрузки
-    debugPrint('Environment loaded');
-    // Проверка наличия API ключа
-    debugPrint('API Key present: ${dotenv.env['OPENROUTER_API_KEY'] != null}');
-    // Логирование базового URL
-    debugPrint('Base URL: ${dotenv.env['BASE_URL']}');
+    final appSettingsService = AppSettingsService();
+    await appSettingsService.init();
+
+    // Initialize OpenRouterClient with the app settings
+    await OpenRouterClient.initialize(appSettingsService);
 
     // Запуск приложения с обработчиком ошибок
-    runApp(const ErrorBoundaryWidget(child: MyApp()));
+    runApp(
+      Provider<AppSettingsService>(
+        create: (_) => appSettingsService,
+        child: const ErrorBoundaryWidget(child: MyApp()),
+      ),
+    );
   } catch (e, stackTrace) {
     // Логирование ошибки запуска приложения
     debugPrint('Error starting app: $e');
@@ -131,7 +134,9 @@ class MyApp extends StatelessWidget {
       create: (_) {
         try {
           // Создаем экземпляр ChatProvider
-          return ChatProvider();
+          final appSettingsService =
+              Provider.of<AppSettingsService>(context, listen: false);
+          return ChatProvider(appSettingsService);
         } catch (e, stackTrace) {
           // Логирование ошибки создания провайдера
           debugPrint('Error creating ChatProvider: $e');

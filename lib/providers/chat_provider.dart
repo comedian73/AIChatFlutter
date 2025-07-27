@@ -15,10 +15,14 @@ import '../services/database_service.dart';
 // Импорт сервиса для аналитики
 import '../services/analytics_service.dart';
 
+import 'package:ai_chat_flutter/services/app_settings_service.dart';
+
 // Основной класс провайдера для управления состоянием чата
 class ChatProvider with ChangeNotifier {
   // Клиент для работы с API
   final OpenRouterClient _api = OpenRouterClient();
+  // Сервис настроек приложения
+  final AppSettingsService _appSettingsService;
   // Список сообщений чата
   final List<ChatMessage> _messages = [];
   // Логи для отладки
@@ -51,11 +55,11 @@ class ChatProvider with ChangeNotifier {
   // Геттер для получения состояния загрузки
   bool get isLoading => _isLoading;
 
-  // Геттер для получения базового URL
-  String? get baseUrl => _api.baseUrl;
+  // Геттер для проверки, используется ли vsetgpt.ru
+  bool get isVsetgpt => _appSettingsService.baseUrl.contains('vsegpt.ru');
 
   // Конструктор провайдера
-  ChatProvider() {
+  ChatProvider(this._appSettingsService) {
     // Инициализация провайдера
     _initializeProvider();
   }

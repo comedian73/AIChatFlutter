@@ -101,9 +101,7 @@ class _MessageBubble extends StatelessWidget {
                   if (message.cost != null)
                     Consumer<ChatProvider>(
                       builder: (context, chatProvider, child) {
-                        final isVsetgpt =
-                            chatProvider.baseUrl?.contains('vsetgpt.ru') ==
-                                true;
+                        final isVsetgpt = chatProvider.isVsetgpt;
                         return Text(
                           message.cost! < 0.001
                               ? isVsetgpt
@@ -633,9 +631,7 @@ class ChatScreen extends StatelessWidget {
                                 ),
                                 Consumer<ChatProvider>(
                                   builder: (context, chatProvider, child) {
-                                    final isVsetgpt = chatProvider.baseUrl
-                                            ?.contains('vsetgpt.ru') ==
-                                        true;
+                                    final isVsetgpt = chatProvider.isVsetgpt;
                                     return Text(
                                       isVsetgpt
                                           ? 'Стоимость: ${entry.value['cost'] < 1e-8 ? '0.0' : entry.value['cost'].toStringAsFixed(8)}₽'
