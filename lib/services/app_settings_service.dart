@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart'; // Import for ChangeNotifier
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppSettingsService {
+class AppSettingsService extends ChangeNotifier {
   late SharedPreferences _prefs;
 
   static const String _isFirstLaunchKey = 'isFirstLaunch';
@@ -42,9 +43,11 @@ class AppSettingsService {
 
   Future<void> setOpenRouterApiKey(String apiKey) async {
     await _prefs.setString(_openRouterApiKey, apiKey);
+    notifyListeners();
   }
 
   Future<void> setBaseUrl(String baseUrl) async {
     await _prefs.setString(_baseUrlKey, baseUrl);
+    notifyListeners();
   }
 }

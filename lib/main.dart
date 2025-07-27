@@ -90,8 +90,8 @@ void main() async {
 
     // Запуск приложения с обработчиком ошибок
     runApp(
-      Provider<AppSettingsService>(
-        create: (_) => appSettingsService,
+      ChangeNotifierProvider<AppSettingsService>.value(
+        value: appSettingsService,
         child: const ErrorBoundaryWidget(child: MyApp()),
       ),
     );
@@ -122,31 +122,23 @@ void main() async {
 
 // Основной виджет приложения
 class MyApp extends StatelessWidget {
-  // Конструктор с ключом
   const MyApp({super.key});
 
-  // Метод построения виджета
   @override
   Widget build(BuildContext context) {
-    // Используем ChangeNotifierProvider для управления состоянием
+    // Listen to AppSettingsService for changes
+    final appSettingsService = Provider.of<AppSettingsService>(context);
+
     return ChangeNotifierProvider(
-      // Функция создания провайдера
       create: (_) {
         try {
-          // Создаем экземпляр ChatProvider
-          final appSettingsService =
-              Provider.of<AppSettingsService>(context, listen: false);
           return ChatProvider(appSettingsService);
         } catch (e, stackTrace) {
-          // Логирование ошибки создания провайдера
           debugPrint('Error creating ChatProvider: $e');
-          // Логирование стека вызовов
           debugPrint('Stack trace: $stackTrace');
-          // Повторный выброс исключения
           rethrow;
         }
       },
-      // Основной виджет MaterialApp
       child: MaterialApp(
         // Настройка поведения прокрутки
         builder: (context, child) {

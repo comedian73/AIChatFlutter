@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ai_chat_flutter/services/app_settings_service.dart';
 import 'package:ai_chat_flutter/api/openrouter_client.dart';
+import 'package:ai_chat_flutter/screens/chat_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -40,6 +41,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await OpenRouterClient.initialize(_appSettingsService);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Settings saved!')),
+    );
+    // Navigate back and then replace the current route with ChatScreen to re-initialize
+    Navigator.pop(context); // Pop the settings screen
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const ChatScreen()),
     );
   }
 
