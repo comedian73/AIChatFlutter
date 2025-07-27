@@ -20,7 +20,7 @@ import 'package:ai_chat_flutter/services/app_settings_service.dart';
 // Основной класс провайдера для управления состоянием чата
 class ChatProvider with ChangeNotifier {
   // Клиент для работы с API
-  final OpenRouterClient _api = OpenRouterClient();
+  late final OpenRouterClient _api;
   // Сервис настроек приложения
   final AppSettingsService _appSettingsService;
   // Список сообщений чата
@@ -60,8 +60,18 @@ class ChatProvider with ChangeNotifier {
 
   // Конструктор провайдера
   ChatProvider(this._appSettingsService) {
+    // Инициализация клиента OpenRouter
+    _api = OpenRouterClient();
     // Инициализация провайдера
     _initializeProvider();
+  }
+
+  // Метод для переинициализации клиента OpenRouter
+  Future<void> reinitializeClient() async {
+    await OpenRouterClient.initialize(_appSettingsService);
+    await _loadModels();
+    await _loadBalance();
+    notifyListeners();
   }
 
   // Метод инициализации провайдера

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Added this import
 import 'package:ai_chat_flutter/services/app_settings_service.dart';
 import 'package:ai_chat_flutter/api/openrouter_client.dart';
-import 'package:ai_chat_flutter/screens/chat_screen.dart';
+import 'package:ai_chat_flutter/providers/chat_provider.dart'; // Import ChatProvider
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -18,7 +18,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   final Map<String, String> _baseUrlOptions = {
     "OpenRouter.ai": 'https://openrouter.ai/api/v1',
-    "VseGPT.ru": 'https://api.vsetgpt.ru/v1',
+    "VseGPT.ru": 'https://api.vsegpt.ru/v1',
   };
 
   @override
@@ -31,7 +31,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadSettings() async {
     _apiKeyController.text = _appSettingsService.openRouterApiKey;
-    _selectedBaseUrl = _appSettingsService.baseUrl;
+    String? loadedBaseUrl = _appSettingsService.baseUrl;
+
+    if (loadedBaseUrl != null && _baseUrlOptions.containsValue(loadedBaseUrl)) {
+      _selectedBaseUrl = loadedBaseUrl;
+    } else {
+      // Default to OpenRouter.ai if the loaded URL is null or not in the options
+      _selectedBaseUrl = _baseUrlOptions["OpenRouter.ai"];
+    }
     setState(() {});
   }
 
@@ -42,15 +49,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
     // Re-initialize OpenRouterClient with new settings
     await OpenRouterClient.initialize(_appSettingsService);
+
+    // Get ChatProvider instance and reinitialize it
+    final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+    await chatProvider.reinitializeClient();
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Settings saved!')),
     );
-    // Navigate back and then replace the current route with ChatScreen to re-initialize
     Navigator.pop(context); // Pop the settings screen
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const ChatScreen()),
-    );
   }
 
   @override
