@@ -13,10 +13,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final TextEditingController _apiKeyController = TextEditingController();
   String? _selectedBaseUrl;
 
-  final List<String> _baseUrlOptions = [
-    'https://openrouter.ai/api/v1',
-    'https://api.vsetgpt.ru/v1',
-  ];
+  final Map<String, String> _baseUrlOptions = {
+    "OpenRouter.ai": 'https://openrouter.ai/api/v1',
+    "VseGPT.ru": 'https://api.vsetgpt.ru/v1',
+  };
 
   @override
   void initState() {
@@ -44,27 +44,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text('Настройки'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('BASE_URL:'),
+            const Text('Провайдер:'),
             DropdownButton<String>(
               value: _selectedBaseUrl,
-              hint: const Text('Select a base URL'),
+              hint: const Text('Выбирите провайдера:'),
               onChanged: (String? newValue) {
                 setState(() {
                   _selectedBaseUrl = newValue;
                 });
               },
-              items:
-                  _baseUrlOptions.map<DropdownMenuItem<String>>((String value) {
+              items: _baseUrlOptions.entries.map<DropdownMenuItem<String>>(
+                  (MapEntry<String, String> entry) {
                 return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+                  value: entry.value,
+                  child: Text(entry.key),
                 );
               }).toList(),
             ),
@@ -72,14 +72,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             TextField(
               controller: _apiKeyController,
               decoration: const InputDecoration(
-                labelText: 'OPENROUTER_API_KEY',
+                labelText: 'API-ключ провайдера',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveSettings,
-              child: const Text('Save Settings'),
+              child: const Text('Сохранить'),
             ),
           ],
         ),
