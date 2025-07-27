@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../providers/chat_provider.dart';
 // Импорт модели сообщения
 import '../models/message.dart';
+import 'settings_screen.dart';
 
 // Виджет для обработки ошибок в UI
 class ErrorBoundary extends StatelessWidget {
@@ -261,6 +262,15 @@ class ChatScreen extends StatelessWidget {
           _buildModelSelector(context),
           const Spacer(),
           _buildBalanceDisplay(context),
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.white, size: 16),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            },
+          ),
           _buildMenuButton(context),
         ],
       ),

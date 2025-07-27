@@ -39,4 +39,12 @@ class AppSettingsService {
   String get logLevel => _prefs.getString(_logLevelKey) ?? 'INFO';
   int get maxTokens => _prefs.getInt(_maxTokensKey) ?? 1000;
   double get temperature => _prefs.getDouble(_temperatureKey) ?? 0.7;
+
+  Future<void> setOpenRouterApiKey(String apiKey) async {
+    await _prefs.setString(_openRouterApiKey, apiKey);
+  }
+
+  Future<void> setBaseUrl(String baseUrl) async {
+    await _prefs.setString(_baseUrlKey, baseUrl);
+  }
 }
