@@ -103,10 +103,20 @@ class ChatProvider with ChangeNotifier {
       // Сортировка моделей по имени по возрастанию
       _availableModels
           .sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
-      // Установка модели по умолчанию, если она не выбрана
+
+      // Validate _currentModel: if it's not in the available models, reset it.
+      if (_currentModel != null &&
+          !_availableModels.any((model) => model['id'] == _currentModel)) {
+        _currentModel = null; // Reset if not found
+      }
+
+      // Set default model if none is selected or if the selected one was reset
       if (_availableModels.isNotEmpty && _currentModel == null) {
         _currentModel = _availableModels[0]['id'];
+      } else if (_availableModels.isEmpty) {
+        _currentModel = null; // Ensure null if no models are available
       }
+
       // Уведомление слушателей об изменениях
       notifyListeners();
     } catch (e) {
