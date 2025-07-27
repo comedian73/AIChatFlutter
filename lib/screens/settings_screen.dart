@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Added this import
 import 'package:ai_chat_flutter/services/app_settings_service.dart';
 import 'package:ai_chat_flutter/api/openrouter_client.dart';
 import 'package:ai_chat_flutter/screens/chat_screen.dart';
@@ -11,7 +12,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final AppSettingsService _appSettingsService = AppSettingsService();
+  late AppSettingsService _appSettingsService;
   final TextEditingController _apiKeyController = TextEditingController();
   String? _selectedBaseUrl;
 
@@ -23,6 +24,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
+    _appSettingsService =
+        Provider.of<AppSettingsService>(context, listen: false);
     _loadSettings();
   }
 

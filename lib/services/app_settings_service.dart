@@ -3,7 +3,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppSettingsService extends ChangeNotifier {
+  static final AppSettingsService _instance = AppSettingsService._internal();
   late SharedPreferences _prefs;
+
+  factory AppSettingsService() {
+    return _instance;
+  }
+
+  AppSettingsService._internal();
 
   static const String _isFirstLaunchKey = 'isFirstLaunch';
   static const String _openRouterApiKey = 'OPENROUTER_API_KEY';
