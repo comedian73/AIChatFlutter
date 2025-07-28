@@ -33,7 +33,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _apiKeyController.text = _appSettingsService.openRouterApiKey;
     String? loadedBaseUrl = _appSettingsService.baseUrl;
 
-    if (loadedBaseUrl != null && _baseUrlOptions.containsValue(loadedBaseUrl)) {
+    if (_baseUrlOptions.containsValue(loadedBaseUrl)) {
       _selectedBaseUrl = loadedBaseUrl;
     } else {
       // Default to OpenRouter.ai if the loaded URL is null or not in the options
