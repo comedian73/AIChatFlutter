@@ -16,6 +16,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late AppSettingsService _appSettingsService;
   final TextEditingController _apiKeyController = TextEditingController();
   String? _selectedBaseUrl;
+  bool _isApiKeyHidden = true;
 
   final Map<String, String> _baseUrlOptions = {
     "OpenRouter.ai": 'https://openrouter.ai/api/v1',
@@ -103,9 +104,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 20),
             TextField(
               controller: _apiKeyController,
-              decoration: const InputDecoration(
+              obscureText: _isApiKeyHidden,
+              decoration: InputDecoration(
                 labelText: 'API-ключ провайдера',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isApiKeyHidden ? Icons.visibility_off : Icons.visibility,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isApiKeyHidden = !_isApiKeyHidden;
+                    });
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 20),
