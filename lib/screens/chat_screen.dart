@@ -12,6 +12,7 @@ import '../providers/chat_provider.dart';
 import '../models/message.dart';
 import 'settings_screen.dart';
 import 'analytics_screen.dart'; // Import the new analytics screen
+import 'expenses_chart_screen.dart'; // Import the new expenses chart screen
 
 // Виджет для обработки ошибок в UI
 class ErrorBoundary extends StatelessWidget {
@@ -243,7 +244,7 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -273,6 +274,7 @@ class _ChatScreenState extends State<ChatScreen>
               ),
             ),
             const AnalyticsScreen(), // New Analytics Tab
+            const ExpensesChartScreen(), // New Expenses Chart Tab
           ],
         ),
       ),
@@ -306,6 +308,7 @@ class _ChatScreenState extends State<ChatScreen>
         tabs: const [
           Tab(text: 'Чат'),
           Tab(text: 'Статистика'),
+          Tab(text: 'Расходы'),
         ],
         labelColor: Colors.white,
         unselectedLabelColor: Colors.white54,

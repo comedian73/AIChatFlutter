@@ -128,6 +128,30 @@ class DatabaseService {
     }
   }
 
+  // Метод получения расходов за период
+  Future<List<Map<String, dynamic>>> getExpensesByPeriod(
+      DateTime startDate, DateTime endDate) async {
+    try {
+      final db = await database;
+      final List<Map<String, dynamic>> maps = await db.rawQuery('''
+        SELECT
+          strftime('%Y-%m-%d', timestamp) as date,
+          SUM(cost) as total_cost
+        FROM messages
+        WHERE timestamp BETWEEN ? AND ? AND cost IS NOT NULL
+        GROUP BY date
+        ORDER BY date ASC
+      ''', [
+        startDate.toIso8601String(),
+        endDate.toIso8601String(),
+      ]);
+      return maps;
+    } catch (e) {
+      debugPrint('Error getting expenses by period: $e');
+      return [];
+    }
+  }
+
   // Метод получения статистики по сообщениям
   Future<Map<String, dynamic>> getStatistics() async {
     try {
