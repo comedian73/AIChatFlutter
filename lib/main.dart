@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'providers/chat_provider.dart';
 // Импорт основного экрана чата
 import 'screens/chat_screen.dart';
+import 'screens/api_key_required_screen.dart'; // Import the new screen
 import 'package:ai_chat_flutter/services/app_settings_service.dart';
 import 'package:ai_chat_flutter/api/openrouter_client.dart';
 
@@ -85,14 +86,21 @@ void main() async {
     final appSettingsService = AppSettingsService();
     await appSettingsService.init();
 
-    // Initialize OpenRouterClient with the app settings
-    await OpenRouterClient.initialize(appSettingsService);
+    // Determine the initial screen based on API key presence
+    final Widget initialScreen;
+    if (appSettingsService.openRouterApiKey.isEmpty) {
+      initialScreen = const ApiKeyRequiredScreen();
+    } else {
+      // Initialize OpenRouterClient with the app settings only if API key is present
+      await OpenRouterClient.initialize(appSettingsService);
+      initialScreen = const ChatScreen();
+    }
 
     // Запуск приложения с обработчиком ошибок
     runApp(
       ChangeNotifierProvider<AppSettingsService>.value(
         value: appSettingsService,
-        child: const ErrorBoundaryWidget(child: MyApp()),
+        child: ErrorBoundaryWidget(child: MyApp(initialScreen: initialScreen)),
       ),
     );
   } catch (e, stackTrace) {
@@ -122,7 +130,8 @@ void main() async {
 
 // Основной виджет приложения
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Widget initialScreen; // Add initialScreen parameter
+  const MyApp({super.key, required this.initialScreen}); // Update constructor
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +240,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         // Основной экран приложения
-        home: const ChatScreen(),
+        home: initialScreen, // Use the initialScreen
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart'; // Added this import
 import 'package:ai_chat_flutter/services/app_settings_service.dart';
 import 'package:ai_chat_flutter/api/openrouter_client.dart';
 import 'package:ai_chat_flutter/providers/chat_provider.dart'; // Import ChatProvider
+import 'package:ai_chat_flutter/screens/chat_screen.dart'; // Import ChatScreen
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -57,7 +58,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Settings saved!')),
     );
-    Navigator.pop(context); // Pop the settings screen
+
+    // Check if API key is now present
+    if (_appSettingsService.openRouterApiKey.isNotEmpty) {
+      // If API key is present, navigate to ChatScreen and remove all previous routes
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const ChatScreen()),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      // If API key is still empty, just pop the settings screen
+      Navigator.pop(context);
+    }
   }
 
   @override
