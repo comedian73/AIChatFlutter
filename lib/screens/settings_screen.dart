@@ -122,8 +122,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+                foregroundColor: WidgetStateProperty.all<Color>(
+                    const Color.fromARGB(255, 117, 140, 216)),
+              ),
               onPressed: _saveSettings,
-              child: const Text('Сохранить'),
+              child: const Text(
+                'Сохранить',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),

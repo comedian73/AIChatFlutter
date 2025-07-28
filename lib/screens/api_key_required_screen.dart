@@ -23,6 +23,11 @@ class ApiKeyRequiredScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+                  foregroundColor: WidgetStateProperty.all<Color>(
+                      const Color.fromARGB(255, 117, 140, 216)),
+                ),
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -30,7 +35,10 @@ class ApiKeyRequiredScreen extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('Настройки'),
+                child: const Text(
+                  'Настройки',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
