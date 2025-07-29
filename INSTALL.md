@@ -25,7 +25,7 @@
 
 1. Клонируйте репозиторий:
 ```bash
-git clone https://github.com/neuro-fill/AIChatFlutter.git
+git clone https://github.com/comedian73/AIChatFlutter.git
 cd AIChatFlutter
 ```
 
