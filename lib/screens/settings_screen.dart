@@ -52,9 +52,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // Re-initialize OpenRouterClient with new settings
     await OpenRouterClient.initialize(_appSettingsService);
 
+    if (!mounted) return; // Add this check
     // Get ChatProvider instance and reinitialize it
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
     await chatProvider.reinitializeClient();
+
+    if (!mounted) return; // Add this check
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Settings saved!')),
@@ -63,12 +66,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // Check if API key is now present
     if (_appSettingsService.openRouterApiKey.isNotEmpty) {
       // If API key is present, navigate to ChatScreen and remove all previous routes
+      if (!mounted) return; // Add this check
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const ChatScreen()),
         (Route<dynamic> route) => false,
       );
     } else {
       // If API key is still empty, just pop the settings screen
+      if (!mounted) return; // Add this check
       Navigator.pop(context);
     }
   }

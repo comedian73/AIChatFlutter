@@ -240,17 +240,34 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    // Add a listener to the chat provider to scroll to the bottom when new messages arrive
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ChatProvider>().addListener(_scrollOnNewMessage);
+    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _scrollController.dispose();
+    context.read<ChatProvider>().removeListener(_scrollOnNewMessage);
     super.dispose();
+  }
+
+  void _scrollOnNewMessage() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   @override
@@ -488,6 +505,7 @@ class _ChatScreenState extends State<ChatScreen>
     return Consumer<ChatProvider>(
       builder: (context, chatProvider, child) {
         return ListView.builder(
+          controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           reverse: false,
           itemCount: chatProvider.messages.length,
