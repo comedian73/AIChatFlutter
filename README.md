@@ -1,4 +1,9 @@
 <link rel="stylesheet" href="screenshots\style.css">
+<style>
+mark{
+    background-color: red
+}
+</style>
 
 # AIChatFlutter - Чат-приложение с ИИ
 
@@ -20,7 +25,7 @@ AIChatFlutter - это мультиплатформенное приложени
 
 ## Структура проекта
 
-Основные директории и файлы:
+<mark>Основные директории и файлы:</mark>
 
 - `lib/` - Основной код приложения
   - `main.dart` - Точка входа в приложение
