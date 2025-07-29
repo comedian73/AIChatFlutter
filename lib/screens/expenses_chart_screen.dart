@@ -101,94 +101,96 @@ class _ExpensesChartScreenState extends State<ExpensesChartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () => _selectDateRange(context),
-            child: Text(
-              _startDate == null || _endDate == null
-                  ? 'Выберите период'
-                  : '${DateFormat('dd.MM.yyyy').format(_startDate!)} - ${DateFormat('dd.MM.yyyy').format(_endDate!)}',
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () => _selectDateRange(context),
+              child: Text(
+                _startDate == null || _endDate == null
+                    ? 'Выберите период'
+                    : '${DateFormat('dd.MM.yyyy').format(_startDate!)} - ${DateFormat('dd.MM.yyyy').format(_endDate!)}',
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: _spots.isEmpty
-                ? const Center(
-                    child: Text('Нет данных о расходах за выбранный период.'))
-                : LineChart(
-                    LineChartData(
-                      gridData: const FlGridData(show: false),
-                      titlesData: FlTitlesData(
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (value, meta) {
-                              if (value.toInt() >= 0 &&
-                                  value.toInt() < _bottomTitles.length) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text(
-                                    _bottomTitles[value.toInt()],
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 10,
+            const SizedBox(height: 20),
+            Expanded(
+              child: _spots.isEmpty
+                  ? const Center(
+                      child: Text('Нет данных о расходах за выбранный период.'))
+                  : LineChart(
+                      LineChartData(
+                        gridData: const FlGridData(show: false),
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (value, meta) {
+                                if (value.toInt() >= 0 &&
+                                    value.toInt() < _bottomTitles.length) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      _bottomTitles[value.toInt()],
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 10,
+                                      ),
                                     ),
+                                  );
+                                }
+                                return const Text('');
+                              },
+                              interval: (_bottomTitles.length / 5)
+                                  .ceilToDouble(), // Show about 5 titles
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (value, meta) {
+                                return Text(
+                                  value.toStringAsFixed(2),
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 10,
                                   ),
                                 );
-                              }
-                              return const Text('');
-                            },
-                            interval: (_bottomTitles.length / 5)
-                                .ceilToDouble(), // Show about 5 titles
+                              },
+                              reservedSize: 40,
+                            ),
                           ),
+                          topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
                         ),
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (value, meta) {
-                              return Text(
-                                value.toStringAsFixed(2),
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 10,
-                                ),
-                              );
-                            },
-                            reservedSize: 40,
+                        borderData: FlBorderData(
+                          show: true,
+                          border: Border.all(
+                              color: const Color(0xff37434d), width: 1),
+                        ),
+                        minX: 0,
+                        maxX: (_spots.length - 1).toDouble(),
+                        minY: 0,
+                        maxY: _maxY,
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: _spots,
+                            isCurved: true,
+                            color: Colors.blue,
+                            barWidth: 3,
+                            isStrokeCapRound: true,
+                            dotData: const FlDotData(show: false),
+                            belowBarData: BarAreaData(show: false),
                           ),
-                        ),
-                        topTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        rightTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
+                        ],
                       ),
-                      borderData: FlBorderData(
-                        show: true,
-                        border: Border.all(
-                            color: const Color(0xff37434d), width: 1),
-                      ),
-                      minX: 0,
-                      maxX: (_spots.length - 1).toDouble(),
-                      minY: 0,
-                      maxY: _maxY,
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: _spots,
-                          isCurved: true,
-                          color: Colors.blue,
-                          barWidth: 3,
-                          isStrokeCapRound: true,
-                          dotData: const FlDotData(show: false),
-                          belowBarData: BarAreaData(show: false),
-                        ),
-                      ],
                     ),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
