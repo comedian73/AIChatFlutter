@@ -124,6 +124,29 @@ AIChatFlutter - это мультиплатформенное приложени
 
 ## Примеры внешнего вида на Android устройстве
 
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.zoomable-image {
+  width: 200px; /* Задайте начальный размер */
+  height: 150px;
+  transition: transform 0.3s ease; /* Плавный переход */
+}
+
+.zoomable-image:hover {
+  transform: scale(1.2); /* Увеличение в 1.2 раза */
+}
+</style>
+</head>
+<body>
+
+<img src="screenshots/chat.jpg" alt="Описание изображения" class="zoomable-image">
+
+</body>
+</html>
+
+
 <div style="display: flex; flex-wrap: wrap;">
   <div style="margin: 5px;">
     <img src="screenshots/chat.jpg" alt="Окно чата" width="150">
