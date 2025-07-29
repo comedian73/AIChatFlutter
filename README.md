@@ -124,5 +124,4 @@ AIChatFlutter - это мультиплатформенное приложени
 
 ## Примеры внешнего вида на Android устройстве
 
-<img src="screenshots/chat.jpg" alt="Окно чата" width="150" style="hover{
-  transform: scale(2.075)"> <img src="screenshots/stat.jpg" alt="Окно статистики" width="150"> <img src="screenshots/graf.jpg" alt="Окно с графиком расходов" width="150"> <img src="screenshots/period.jpg" alt="Выбор периода построения графика" width="150"> <img src="screenshots/settings.jpg" alt="Окно настроек" width="150">
+<img src="screenshots/chat.jpg" alt="Окно чата" width="150" onmouseover="this.width=300;this.height=225;" onmouseout="this.width=150;"> <img src="screenshots/stat.jpg" alt="Окно статистики" width="150"> <img src="screenshots/graf.jpg" alt="Окно с графиком расходов" width="150"> <img src="screenshots/period.jpg" alt="Выбор периода построения графика" width="150"> <img src="screenshots/settings.jpg" alt="Окно настроек" width="150">
