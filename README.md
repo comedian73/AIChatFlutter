@@ -1,9 +1,10 @@
 <link rel="stylesheet" href="screenshots\style.css">
+
 <style>
 mark{
     background-color: red
 }
-</style>
+
 
 # AIChatFlutter - Чат-приложение с ИИ
 
