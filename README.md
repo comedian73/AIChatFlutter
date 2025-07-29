@@ -124,8 +124,20 @@ AIChatFlutter - это мультиплатформенное приложени
 
 ## Примеры внешнего вида на Android устройстве
 
-![Окно чата](screenshots/chat.jpg)
-![Окно статистики](screenshots/stat.jpg)
-![Окно с графиком расходов](screenshots/graf.jpg)
-![Выбор периода построения графика](screenshots/period.jpg)
-![Окно настроек](screenshots/settings.jpg)
+<div style="display: flex; flex-wrap: wrap;">
+  <div style="margin: 5px;">
+    <img src="screenshots/chat.jpg" alt="Окно чата" width="150">
+  </div>
+  <div style="margin: 5px;">
+    <img src="screenshots/stat.jpg" alt="Окно статистики" width="150">
+  </div>
+  <div style="margin: 5px;">
+    <img src="screenshots/graf.jpg" alt="Окно с графиком расходов" width="150">
+  </div>
+  <div style="margin: 5px;">
+    <img src="screenshots/period.jpg" alt="Выбор периода построения графика" width="150">
+  </div>
+  <div style="margin: 5px;">
+    <img src="screenshots/settings.jpg" alt="Окно настроек" width="150">
+  </div>
+</div>
