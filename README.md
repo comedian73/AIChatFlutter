@@ -4,7 +4,7 @@
 mark{
     background-color: red
 }
-
+</style>
 
 # AIChatFlutter - Чат-приложение с ИИ
 
