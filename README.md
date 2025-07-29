@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="screenshots/style.css">
+
 # AIChatFlutter - Чат-приложение с ИИ
 
 AIChatFlutter - это мультиплатформенное приложение для общения с искусственным интеллектом, разработанное с использованием Flutter. Приложение поддерживает работу как с OpenRouter.ai, так и с VseGPT.ru, предоставляя гибкие возможности для взаимодействия с различными языковыми моделями.
@@ -124,4 +126,4 @@ AIChatFlutter - это мультиплатформенное приложени
 
 ## Примеры внешнего вида на Android устройстве
 
-<img src="screenshots/chat.jpg" alt="Окно чата" width="150" onmouseover="this.width=300;this.height=225;" onmouseout="this.width=150;"> <img src="screenshots/stat.jpg" alt="Окно статистики" width="150"> <img src="screenshots/graf.jpg" alt="Окно с графиком расходов" width="150"> <img src="screenshots/period.jpg" alt="Выбор периода построения графика" width="150"> <img src="screenshots/settings.jpg" alt="Окно настроек" width="150">
+<img src="screenshots/chat.jpg" alt="Окно чата" width="150" class="zoomable-image"> <img src="screenshots/stat.jpg" alt="Окно статистики" width="150" onmouseover="this.width=300;this.height=225;" onmouseout="this.width=200;this.height=150;"> <img src="screenshots/graf.jpg" alt="Окно с графиком расходов" width="150"> <img src="screenshots/period.jpg" alt="Выбор периода построения графика" width="150"> <img src="screenshots/settings.jpg" alt="Окно настроек" width="150">
