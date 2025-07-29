@@ -3,5 +3,5 @@
 }
 
 .zoomable-image:hover {
-  transform: scale(1.2); /* Увеличение в 1.2 раза */
+  transform: scale(2.2); /* Увеличение в 1.2 раза */
 }
