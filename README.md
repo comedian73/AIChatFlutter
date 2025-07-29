@@ -126,6 +126,6 @@ AIChatFlutter - это мультиплатформенное приложени
 
 ![Окно чата](screenshots/chat.jpg)
 ![Окно статистики](screenshots/stat.jpg)
-![Окно с графиком расходов](screenshots/grag.jpg)
+![Окно с графиком расходов](screenshots/graf.jpg)
 ![Выбор периода построения графика](screenshots/period.jpg)
 ![Окно настроек](screenshots/settings.jpg)
