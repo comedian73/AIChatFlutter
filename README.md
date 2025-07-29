@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="screenshots/style.css">
+<link rel="stylesheet" href="screenshots\style.css">
 
 # AIChatFlutter - Чат-приложение с ИИ
 
