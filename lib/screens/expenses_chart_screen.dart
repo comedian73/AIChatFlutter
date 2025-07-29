@@ -17,7 +17,7 @@ class _ExpensesChartScreenState extends State<ExpensesChartScreen> {
   List<FlSpot> _spots = [];
   double _maxY = 0;
   List<String> _bottomTitles = [];
-  bool _showTimeOnXAxis = false; // New variable to control time display
+  bool _isShortPeriod = false; // New variable to control date format on X-axis
 
   @override
   void initState() {
@@ -27,7 +27,8 @@ class _ExpensesChartScreenState extends State<ExpensesChartScreen> {
 
   void _initializeDates() {
     final now = DateTime.now();
-    _endDate = DateTime(now.year, now.month, now.day);
+    _endDate = DateTime(
+        now.year, now.month, now.day, 23, 59, 59); // End of current day
     _startDate = DateTime(now.year, now.month, 1); // Start of current month
     _fetchExpenses();
   }
@@ -48,68 +49,30 @@ class _ExpensesChartScreenState extends State<ExpensesChartScreen> {
       _bottomTitles = [];
 
       final int daysDifference = _endDate!.difference(_startDate!).inDays;
-      _showTimeOnXAxis = daysDifference <= 7;
+      _isShortPeriod = daysDifference <= 7;
 
-      if (_showTimeOnXAxis) {
-        // If period is 7 days or less, show time on X-axis
-        final Map<DateTime, double> timedExpenses = SplayTreeMap();
-        for (var expense in expenses) {
-          final date = DateTime.parse(expense['date'] as String);
-          final totalCost = (expense['total_cost'] as num).toDouble();
-          timedExpenses[date] = (timedExpenses[date] ?? 0.0) +
-              totalCost; // Aggregate expenses for the same timestamp
+      final Map<DateTime, double> dailyExpenses = SplayTreeMap();
+      for (var expense in expenses) {
+        final date = DateTime.parse(expense['date'] as String);
+        final dateOnly = DateTime(date.year, date.month, date.day);
+        dailyExpenses[dateOnly] = (dailyExpenses[dateOnly] ?? 0.0) +
+            (expense['total_cost'] as num).toDouble();
+      }
+
+      double maxCost = 0;
+      int dayIndex = 0;
+      for (DateTime d = _startDate!;
+          d.isBefore(_endDate!.add(const Duration(days: 1)));
+          d = d.add(const Duration(days: 1))) {
+        final dateOnly = DateTime(d.year, d.month, d.day);
+        final totalCost = dailyExpenses[dateOnly] ?? 0.0;
+        _spots.add(FlSpot(dayIndex.toDouble(), totalCost));
+        if (totalCost > maxCost) {
+          maxCost = totalCost;
         }
-
-        double maxCost = 0;
-        // Calculate total minutes from start date for x-axis
-        final int totalMinutes = _endDate!.difference(_startDate!).inMinutes;
-
-        // Generate spots for each minute within the range, or for each expense
-        // For simplicity, let's just plot the actual expense times for now.
-        // If there are no expenses, we still need a range.
-        if (timedExpenses.isEmpty) {
-          _spots.add(FlSpot(0, 0));
-          _spots.add(FlSpot(totalMinutes.toDouble(), 0));
-        } else {
-          for (var entry in timedExpenses.entries) {
-            final double xValue =
-                entry.key.difference(_startDate!).inMinutes.toDouble();
-            _spots.add(FlSpot(xValue, entry.value));
-            if (entry.value > maxCost) {
-              maxCost = entry.value;
-            }
-          }
-        }
-
-        // For time-based charts, _bottomTitles is not directly used for labels.
-        // The getTitlesWidget will format the value directly.
-        // We can still populate _bottomTitles with dummy values or clear it if not needed.
-        // For now, let's ensure it's empty for time-based charts.
-        _bottomTitles.clear();
-      } else {
-        // If period is more than 7 days, show daily expenses
-        final Map<DateTime, double> dailyExpenses = SplayTreeMap();
-        for (var expense in expenses) {
-          final date = DateTime.parse(expense['date'] as String);
-          final dateOnly = DateTime(date.year, date.month, date.day);
-          dailyExpenses[dateOnly] = (dailyExpenses[dateOnly] ?? 0.0) +
-              (expense['total_cost'] as num).toDouble();
-        }
-
-        double maxCost = 0;
-        int dayIndex = 0;
-        for (DateTime d = _startDate!;
-            d.isBefore(_endDate!.add(const Duration(days: 1)));
-            d = d.add(const Duration(days: 1))) {
-          final dateOnly = DateTime(d.year, d.month, d.day);
-          final totalCost = dailyExpenses[dateOnly] ?? 0.0;
-          _spots.add(FlSpot(dayIndex.toDouble(), totalCost));
-          if (totalCost > maxCost) {
-            maxCost = totalCost;
-          }
-          _bottomTitles.add(DateFormat('dd.MM').format(dateOnly));
-          dayIndex++;
-        }
+        _bottomTitles.add(DateFormat('dd.MM.yyyy')
+            .format(dateOnly)); // Placeholder, will be formatted later
+        dayIndex++;
       }
 
       _maxY = (_spots.isNotEmpty
@@ -153,7 +116,8 @@ class _ExpensesChartScreenState extends State<ExpensesChartScreen> {
         (picked.start != _startDate || picked.end != _endDate)) {
       setState(() {
         _startDate = picked.start;
-        _endDate = picked.end;
+        _endDate = DateTime(picked.end.year, picked.end.month, picked.end.day,
+            23, 59, 59); // Set end of day
       });
       _fetchExpenses();
     }
@@ -187,50 +151,33 @@ class _ExpensesChartScreenState extends State<ExpensesChartScreen> {
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (value, meta) {
-                                if (_showTimeOnXAxis) {
-                                  // For time-based axis, value is minutes from start date
-                                  final DateTime labelTime = _startDate!
-                                      .add(Duration(minutes: value.toInt()));
+                                if (value.toInt() >= 0 &&
+                                    value.toInt() < _bottomTitles.length) {
+                                  final DateTime date = _startDate!
+                                      .add(Duration(days: value.toInt()));
+                                  String format;
+                                  if (_isShortPeriod) {
+                                    format = 'dd'; // Only day for short periods
+                                  } else {
+                                    format =
+                                        'dd.MM'; // Day and month for longer periods
+                                  }
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      DateFormat('HH:mm').format(labelTime),
+                                      DateFormat(format).format(date),
                                       style: const TextStyle(
                                         color: Colors.white70,
                                         fontSize: 10,
                                       ),
                                     ),
                                   );
-                                } else {
-                                  // For date-based axis
-                                  if (value.toInt() >= 0 &&
-                                      value.toInt() < _bottomTitles.length) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Text(
-                                        _bottomTitles[value.toInt()],
-                                        style: const TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                    );
-                                  }
                                 }
                                 return const Text('');
                               },
-                              interval: _showTimeOnXAxis
-                                  ? (_endDate!
-                                              .difference(_startDate!)
-                                              .inMinutes /
-                                          5)
-                                      .ceilToDouble()
-                                      .clamp(
-                                          1.0,
-                                          double
-                                              .infinity) // Ensure interval is at least 1
-                                  : (_bottomTitles.length / 5)
-                                      .ceilToDouble(), // Show about 5 titles for dates
+                              interval: (_bottomTitles.length / 5)
+                                  .ceilToDouble()
+                                  .clamp(1.0, double.infinity),
                             ),
                           ),
                           leftTitles: AxisTitles(
@@ -259,13 +206,7 @@ class _ExpensesChartScreenState extends State<ExpensesChartScreen> {
                               color: const Color(0xff37434d), width: 1),
                         ),
                         minX: 0,
-                        maxX: _showTimeOnXAxis
-                            ? _endDate!
-                                .difference(_startDate!)
-                                .inMinutes
-                                .toDouble()
-                            : (_bottomTitles.length - 1)
-                                .toDouble(), // Use total minutes or day index
+                        maxX: (_bottomTitles.length - 1).toDouble(),
                         minY: 0,
                         maxY: _maxY,
                         lineBarsData: [
